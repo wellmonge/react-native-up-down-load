@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "sdkVersion": "23.0.0",
+    "ios": {
+      "bundleIdentifier": "react-native-up-down-loader"
+    },
+    "android": {
+      "package": "react-native-up-down-loader"
+    },
+    "name": "react-native-up-down-loader",
+    "slug": "react-native-up-down-loader",
+    "version": "0.1.0",
+    "isDetached": true,
+    "detach": {
+      "scheme": "exp1acf6e518c50473bb32532b6f02f4270",
+      "androidExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/android-v2.1.1-sdk23.0.0-4edc3e46-9fb5-441c-86a4-2a46f92e18a6.tar.gz"
+    }
+  }
+}
