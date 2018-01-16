@@ -307,11 +307,11 @@ public class Upload extends ReactContextBaseJavaModule implements ActivityEventL
     }
 
     @ReactMethod
-    public void  showFile (Callback callback)throws JSONException, IOException {
+    public void showFile(Callback callback)throws JSONException, IOException {
     try{
             Context context = getCurrentActivity();
 
-            Uri contentUri = getUriForFile(context, "com.ensincprofessor.fileprovider", currentFile);
+            Uri contentUri = getUriForFile(context, "react-native-up-down-loader.fileprovider", currentFile);
 			
 			currentFile.delete();
 
