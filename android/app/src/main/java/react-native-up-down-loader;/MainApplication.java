@@ -1,5 +1,7 @@
 package react-native-up-down-loader;
 
+import upload-component.*;
+
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactPackage;
@@ -15,6 +17,7 @@ public class MainApplication extends MultiDexApplication {
   // Needed for `react-native link`
   public List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
+        new UploadPackage() 
         // Add your own packages here!
         // TODO: add cool native modules
 
