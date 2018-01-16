@@ -1,4 +1,4 @@
-package react-native-up-down-loader.generated;
+package reactnativeupdownloader.generated;
 
 // This file is auto-generated. Please don't rename!
 public class ExponentBuildConstants {
