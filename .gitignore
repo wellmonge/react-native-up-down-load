@@ -20,4 +20,3 @@ yarn-error.log*
 .babelrc
 .flowconfig
 .watchmanconfig
-/yarn.lock
