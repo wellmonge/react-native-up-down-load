@@ -10,22 +10,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class UploadPackage implements ReactPackage {
+public class UploadPackage implements ReactPackage, IUploadPackage {
 
-  @Override
-  public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-    //Registering the module.
-    return Arrays.<NativeModule>asList(
-            new Upload(reactContext)); 
-  }
+    @Override
+    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+        //Registering the module.
+        return Arrays.<NativeModule>asList(
+                new Upload(reactContext));
+    }
 
-  @Override
-  public List<Class<? extends JavaScriptModule>> createJSModules() {
-    return Collections.emptyList();
-  }
+    @Override
+    public List<Class<? extends JavaScriptModule>> createJSModules() {
+        return Collections.emptyList();
+    }
 
-  @Override
-  public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-    return Collections.emptyList();
-  }
+    @Override
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+        return Collections.emptyList();
+    }
 }

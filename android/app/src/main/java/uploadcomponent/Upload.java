@@ -1,5 +1,48 @@
 package uploadcomponent;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.support.annotation.RequiresApi;
+import android.webkit.MimeTypeMap;
+
+import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
+
+import org.json.JSONException;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import expolib_v1.okhttp3.MediaType;
+import expolib_v1.okhttp3.MultipartBody;
+import expolib_v1.okhttp3.OkHttpClient;
+import expolib_v1.okhttp3.Request;
+import expolib_v1.okhttp3.RequestBody;
+import expolib_v1.okhttp3.Response;
+import expolib_v1.okio.ByteString;
+
+import static android.support.v4.content.FileProvider.getUriForFile;
+
 public class Upload extends ReactContextBaseJavaModule implements ActivityEventListener {
 
     private static final int PICK_CONTENT = 1;
@@ -84,12 +127,12 @@ public class Upload extends ReactContextBaseJavaModule implements ActivityEventL
         contentName = "";
         if (pickerSuccessCallback != null) {
             if (resultCode == activity.RESULT_CANCELED) {
-                pickerCancelCallback.invoke(ResultCanceled);
+                //pickerCancelCallback.invoke(ResultCanceled);
             } else if (resultCode == Activity.RESULT_OK){
                 Uri selected = null;
                 selected = resultData.getData();
                 if (selected == null) {
-                    pickerCancelCallback.invoke(FileNotFound);
+                    //pickerCancelCallback.invoke(FileNotFound);
                 } else {
                     try {
                         Context context = getReactApplicationContext();
@@ -125,7 +168,7 @@ public class Upload extends ReactContextBaseJavaModule implements ActivityEventL
 
                         pickerSuccessCallback.invoke(contentName, contentMimeType);
                     } catch (Exception e) {
-                        pickerCancelCallback.invoke(FileNotFound);
+                        //pickerCancelCallback.invoke(FileNotFound);
                     }
                 }
             }
@@ -212,7 +255,7 @@ public class Upload extends ReactContextBaseJavaModule implements ActivityEventL
         RequestBody reqBodFile;
 
         if (contentSelected == null){
-            reqBodFile = RequestBody.create(null,ByteString.EMPTY);
+            reqBodFile = RequestBody.create(null, ByteString.EMPTY);
         }else {
             reqBodFile = RequestBody.create(MediaType.parse(contentMimeType), contentSelected);
         }
@@ -249,7 +292,7 @@ public class Upload extends ReactContextBaseJavaModule implements ActivityEventL
         pickerCancelCallback = null;
 
         if (currentActivity == null) {
-            cancelCallback.invoke(ResultCanceled);
+            //cancelCallback.invoke(ResultCanceled);
             return;
         }
         pickerSuccessCallback = successCallback;
@@ -270,7 +313,15 @@ public class Upload extends ReactContextBaseJavaModule implements ActivityEventL
 
     @ReactMethod
     public void download(String URLtoDownload, Callback callback) throws JSONException, IOException {
+        try {
+            currentFile = this.DownloadFile(URLtoDownload);
+            //callback.invoke(SuccessMessage);
+        } catch (android.content.ActivityNotFoundException e) {
+            //callback.invoke(InternalError);
+        }
+    }
 
+    public File DownloadFile (String URLtoDownload) throws IOException {
         try {
             Context context = getCurrentActivity();
 
@@ -298,18 +349,20 @@ public class Upload extends ReactContextBaseJavaModule implements ActivityEventL
                 reader.close();
                 outStream.close();
             }
-            currentFile = f;
-            callback.invoke(SuccessMessage);
+
+            return f;
 
         } catch (android.content.ActivityNotFoundException e) {
-            callback.invoke(InternalError);
+           throw new IOException(e.getMessage());
         }
     }
 
     @ReactMethod
-    public void showFile(Callback callback)throws JSONException, IOException {
+    public void showFile(String URLtoDownload)throws IOException {
     try{
             Context context = getCurrentActivity();
+
+            currentFile = this.DownloadFile(URLtoDownload);
 
             Uri contentUri = getUriForFile(context, "react-native-up-down-loader.fileprovider", currentFile);
 			
@@ -327,10 +380,10 @@ public class Upload extends ReactContextBaseJavaModule implements ActivityEventL
                 context.startActivity(intent);
             }
 
-            callback.invoke(SuccessMessage);
+            //callback.invoke(SuccessMessage);
 
         } catch (android.content.ActivityNotFoundException e) {
-            callback.invoke(InternalError);
+            //callback.invoke(InternalError);
         }
 
     }
