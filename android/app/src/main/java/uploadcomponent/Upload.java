@@ -1,4 +1,4 @@
-package upload-component;
+package uploadcomponent;
 
 public class Upload extends ReactContextBaseJavaModule implements ActivityEventListener {
 

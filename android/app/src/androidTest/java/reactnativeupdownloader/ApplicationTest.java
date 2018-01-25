@@ -1,4 +1,4 @@
-package react-native-up-down-loader;
+package reactnativeupdownloader;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

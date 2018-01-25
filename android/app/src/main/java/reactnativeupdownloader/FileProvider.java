@@ -1,4 +1,4 @@
-package react-native-up-down-loader;
+package reactnativeupdownloader;
 
 /**
  * Created by wellinton on 21/09/2017.

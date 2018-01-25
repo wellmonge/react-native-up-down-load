@@ -1,6 +1,6 @@
-package react-native-up-down-loader;
+package reactnativeupdownloader;
 
-import upload-component.*;
+import uploadcomponent.*;
 
 import android.support.multidex.MultiDexApplication;
 

@@ -1,4 +1,4 @@
-package upload-component;
+package uploadcomponent;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;

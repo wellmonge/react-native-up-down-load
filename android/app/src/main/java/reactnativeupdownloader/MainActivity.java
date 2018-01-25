@@ -1,4 +1,4 @@
-package react-native-up-down-loader;
+package reactnativeupdownloader;
 
 import android.os.Bundle;
 
@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import react-native-up-down-loader.generated.ExponentBuildConstants;
+import reactnativeupdownloader.generated.ExponentBuildConstants;
+
 import host.exp.expoview.ExponentActivity;
 
 public class MainActivity extends ExponentActivity {
