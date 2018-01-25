@@ -2,7 +2,8 @@
 
 # expo
 .expo/
-.expo-source/
+.expo-source
+.vs-code
 
 # dependencies
 /node_modules
