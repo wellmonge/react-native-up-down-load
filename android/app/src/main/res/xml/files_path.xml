@@ -1,4 +1,7 @@
 <paths>
-     <cache-path name="react-native-loader_cache_files" path="." />
-     <files-path name="files" path="/" />
+     <cache-path name="rnupdownloader-cache" path="/rnupdownloader-cache/" />
+     <files-path name="rnupdownloader-files" path="/rnupdownloader-files/" />
+     <external-path name="rnupdownloader-external-path" path="/rnupdownloader-external-path/" />
+     <external-files-path name="rnupdownloader-external-path" path="rnupdownloader-external-path" />
+     <external-cache-path name="rnupdownloader-external-cache-path" path="rnupdownloader-external-cache-path" />
 </paths>
