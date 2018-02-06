@@ -1,4 +1,4 @@
-package com.reactnativeupdownloader.Provider;
+package com.reactnativeupdownloader;
 
 /**
  * Created by wellinton on 21/09/2017.
