@@ -1,6 +1,6 @@
 {
-  "name": "@wellmonge/react-native-up-down-loader",
-  "version": "0.1.1001",
+  "name": "react-native-up-down-loader",
+  "version": "0.1.10021",
   "main": "index.js",
   "private": false,
   "scripts": {
