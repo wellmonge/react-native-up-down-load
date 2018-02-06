@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, NativeModules, Upload,  } from 'react-native';
 debugger;
 const reactnativeupdownloader = NativeModules.UploadModule;
 
-
 const UploadManager = NativeModules.Upload;
 
 export default class App extends React.Component {
@@ -24,5 +23,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+<<<<<<< HEAD
   }
+=======
+  },
+>>>>>>> 5784f6b1ea01dba48339d15f6d642d6574a814ce
 });
