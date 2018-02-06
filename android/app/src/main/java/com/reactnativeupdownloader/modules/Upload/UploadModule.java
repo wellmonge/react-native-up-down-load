@@ -2,15 +2,11 @@ package com.reactnativeupdownloader.modules.Upload;
 
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
 import android.webkit.MimeTypeMap;
@@ -21,13 +17,9 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.reactnativeupdownloader.Helpers.ApplicationFilesHelpers;
 
-import org.json.JSONException;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,15 +33,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.ByteString;
 
-import static android.support.v4.content.FileProvider.getUriForFile;
-
 public class UploadModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
     private static final int PICK_CONTENT = 1;
-
-    private static final char UNIX_SEPARATOR = '/';
-
-    private static final char WINDOWS_SEPARATOR = '\\';
 
     private OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
@@ -63,27 +49,9 @@ public class UploadModule extends ReactContextBaseJavaModule implements Activity
 
     private String contentName;
 
-    private File currentFile;
-
     private Callback pickerSuccessCallback;
 
     private Callback pickerCancelCallback;
-
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-    }
 
     public UploadModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -99,134 +67,6 @@ public class UploadModule extends ReactContextBaseJavaModule implements Activity
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         return constants;
-    }
-
-    public static String getName(String filename) {
-        if (filename == null) {
-            return null;
-        }
-        int index = indexOfLastSeparator(filename);
-        return filename.substring(index + 1);
-    }
-
-    public static int indexOfLastSeparator(String filename) {
-        if (filename == null) {
-            return -1;
-        }
-        int lastUnixPos = filename.lastIndexOf(UNIX_SEPARATOR);
-        int lastWindowsPos = filename.lastIndexOf(WINDOWS_SEPARATOR);
-        return Math.max(lastUnixPos, lastWindowsPos);
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent resultData) {
-
-        contentSelected = null;
-        contentName = "";
-        if (pickerSuccessCallback != null) {
-            if (resultCode == activity.RESULT_CANCELED) {
-                //pickerCancelCallback.invoke(ResultCanceled);
-            } else if (resultCode == Activity.RESULT_OK){
-                Uri selected = null;
-                selected = resultData.getData();
-                if (selected == null) {
-                    //pickerCancelCallback.invoke(FileNotFound);
-                } else {
-                    try {
-                        Context context = getReactApplicationContext();
-                        ContentResolver cr = context.getContentResolver();
-                        InputStream iStream =   cr.openInputStream(selected);
-
-                        String mimType = cr.getType(selected);
-
-                        if (mimType == null){
-                            String path = getPath(context, selected);
-                            if (path == null) {
-                                contentName = getName(selected.toString());
-                            } else {
-                                File file = new File(path);
-                                contentName = file.getName();
-                            }
-                            String mimeType = "";
-                            String extension = MimeTypeMap.getFileExtensionFromUrl(selected.getPath());
-                            if (extension != null) {
-                                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-                            }
-                            contentMimeType = mimeType;
-
-                        }else{
-                            Cursor returnCursor = cr.query(selected, null, null, null, null);
-                            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                            returnCursor.moveToFirst();
-                            contentName = returnCursor.getString(nameIndex);
-                            contentMimeType = cr.getType(selected);
-                        }
-
-                        contentSelected = this.getBytes(iStream);
-
-                        pickerSuccessCallback.invoke(contentName, contentMimeType);
-                    } catch (Exception e) {
-                        //pickerCancelCallback.invoke(FileNotFound);
-                    }
-                }
-            }
-        }
-    }
-
-    public static String getPath(Context context, Uri uri) {
-
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-            }
-            else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-                return getDataColumn(context, contentUri, null, null);
-            }
-            else
-            if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {split[1]};
-                return getDataColumn(context, contentUri, selection, selectionArgs);
-            }
-        }
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            if (isGooglePhotosUri(uri))
-                return uri.getLastPathSegment();
-            return getDataColumn(context, uri, null, null);
-        }
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-
-        return null;
-    }
-
-    @Override
-    public void onNewIntent(Intent intent) {
-        this.onNewIntent(intent);
     }
 
     @ReactMethod
@@ -311,111 +151,67 @@ public class UploadModule extends ReactContextBaseJavaModule implements Activity
         }
     }
 
-    @ReactMethod
-    public void download(String URLtoDownload, Callback callback) throws JSONException, IOException {
-        try {
-            currentFile = this.DownloadFile(URLtoDownload);
-            //callback.invoke(SuccessMessage);
-        } catch (android.content.ActivityNotFoundException e) {
-            //callback.invoke(InternalError);
-        }
-    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent resultData) {
 
-    public File DownloadFile (String URLtoDownload) throws IOException {
-        try {
-            Context context = getCurrentActivity();
+        ApplicationFilesHelpers applicationFilesHelpers = new ApplicationFilesHelpers();
+        contentSelected = null;
+        contentName = "";
+        if (pickerSuccessCallback != null) {
+            if (resultCode == activity.RESULT_CANCELED) {
+                //pickerCancelCallback.invoke(ResultCanceled);
+            } else if (resultCode == Activity.RESULT_OK){
+                Uri selected = null;
+                selected = resultData.getData();
+                if (selected == null) {
+                    //pickerCancelCallback.invoke(FileNotFound);
+                } else {
+                    try {
+                        Context context = getReactApplicationContext();
+                        ContentResolver cr = context.getContentResolver();
+                        InputStream iStream =   cr.openInputStream(selected);
 
-            String fileName = URLtoDownload.split("/")[3].toString();
+                        String mimType = cr.getType(selected);
 
-            File f = new File(context.getCacheDir(), fileName);
+                        if (mimType == null){
+                            String path = applicationFilesHelpers.getPath(context, selected);
+                            if (path == null) {
+                                contentName = applicationFilesHelpers.getName(selected.toString());
+                            } else {
+                                File file = new File(path);
+                                contentName = file.getName();
+                            }
+                            String mimeType = "";
+                            String extension = MimeTypeMap.getFileExtensionFromUrl(selected.getPath());
+                            if (extension != null) {
+                                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                            }
+                            contentMimeType = mimeType;
 
-            if (!f.exists()){
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url(URLtoDownload)
-                        .addHeader("Content-Type", "application/json")
-                        .build();
-                Response res  = client.newCall(request).execute();
-                InputStream reader = res.body().byteStream();
+                        }else{
+                            Cursor returnCursor = cr.query(selected, null, null, null, null);
+                            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                            returnCursor.moveToFirst();
+                            contentName = returnCursor.getString(nameIndex);
+                            contentMimeType = cr.getType(selected);
+                        }
 
-                f.setReadable(true, false);
 
-                FileOutputStream outStream = new FileOutputStream(f);
-                byte[] buffer = new byte[1024];
-                int readBytes = reader.read(buffer);
-                while (readBytes > 0) {
-                    outStream.write(buffer, 0, readBytes);
-                    readBytes = reader.read(buffer);
+                        contentSelected = applicationFilesHelpers .getBytes(iStream);
+
+                        pickerSuccessCallback.invoke(contentName, contentMimeType);
+                    } catch (Exception e) {
+                        //pickerCancelCallback.invoke(FileNotFound);
+                    }
                 }
-                reader.close();
-                outStream.close();
             }
-
-            return f;
-
-        } catch (android.content.ActivityNotFoundException e) {
-            throw new IOException(e.getMessage());
         }
     }
 
-    @ReactMethod
-    public void showFile(String URLtoDownload)throws IOException {
-        try{
-            Context context = getCurrentActivity();
-
-            currentFile = this.DownloadFile(URLtoDownload);
-
-            Uri contentUri = getUriForFile(context, "react-native-up-down-loader.fileprovider", currentFile);
-
-            currentFile.delete();
-
-            ContentResolver cr = context.getContentResolver();
-            String type = cr.getType(contentUri);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(contentUri,type);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-            if (intent.resolveActivity(context.getPackageManager()) != null) {
-                context.startActivity(intent);
-            }
-
-            //callback.invoke(SuccessMessage);
-
-        } catch (android.content.ActivityNotFoundException e) {
-            //callback.invoke(InternalError);
-        }
-
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.onNewIntent(intent);
     }
 
-    //####
-
-    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = { column };
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-    public byte[] getBytes(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-        long bufferSize = 2024;
-        byte[] buffer = new byte[(int) bufferSize];
-
-        int len = 0;
-        while ((len = inputStream.read(buffer)) != -1) {
-            byteBuffer.write(buffer, 0, len);
-        }
-        return byteBuffer.toByteArray();
-    }
 }

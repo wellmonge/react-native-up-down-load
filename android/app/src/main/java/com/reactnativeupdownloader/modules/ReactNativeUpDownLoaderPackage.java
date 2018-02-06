@@ -1,10 +1,11 @@
 package com.reactnativeupdownloader.modules;
-
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
+import com.reactnativeupdownloader.modules.Download.DownloadModule;
 import com.reactnativeupdownloader.modules.Upload.UploadModule;
+import com.reactnativeupdownloader.modules.Viewer.ViewerModule;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,7 +17,7 @@ public class ReactNativeUpDownLoaderPackage implements IReactNativeUpDownLoaderP
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         //Registering the module.
         return Arrays.<NativeModule>asList(
-                new UploadModule(reactContext));
+            new UploadModule(reactContext), new DownloadModule(reactContext), new ViewerModule(reactContext));
     }
 
     @Override
