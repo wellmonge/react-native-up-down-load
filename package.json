@@ -1,6 +1,6 @@
 {
-  "name": "react-native-up-down-loader",
-  "version": "0.1.1002",
+  "name": "react-native-up-down-load",
+  "version": "0.1.1003",
   "main": "index.js",
   "private": false,
   "scripts": {
