@@ -1,3 +1,5 @@
-import { AppRegistry } from 'react-native';
-import App from './App';
-AppRegistry.registerComponent('reactnativeupdownloader', () => App);
+import { StyleSheet, Text, View, NativeModules, Upload,  } from 'react-native';
+
+const ReactNativeUpDownloader = NativeModules.UploadModule;
+
+export default ReactNativeUpDownloader;

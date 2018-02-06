@@ -1,10 +1,8 @@
 {
-  "name": "reactnativeupdownloader",
-  "version": "0.1.0",
-  "private": true,
-  "devDependencies": {
-    "react-test-renderer": "16.2.0"
-  },
+  "name": "@wellmonge/react-native-up-down-loader",
+  "version": "0.1.1001",
+  "main": "index.js",
+  "private": false,
   "scripts": {
     "start": "react-native start",
     "android": "react-native run-android",
@@ -15,8 +13,7 @@
     "preset": "react-native"
   },
   "dependencies": {
-    "babel-preset-expo": "^4.0.0",
-    "babel-preset-react-native": "^4.0.0",
+    "babel-preset-expo": "4.0.0",
     "react": "16.2.0",
     "react-native": "0.52.0"
   }
