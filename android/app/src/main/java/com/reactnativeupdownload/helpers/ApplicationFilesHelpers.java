@@ -1,4 +1,4 @@
-package com.reactnativeupdownloader.Helpers;
+package com.reactnativeupdownload.helpers;
 
 import android.content.ContentUris;
 import android.content.Context;

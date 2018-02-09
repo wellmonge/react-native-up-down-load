@@ -1,7 +1,7 @@
 <paths>
-     <cache-path name="rnupdownloader-cache" path="/rnupdownloader-cache/" />
-     <files-path name="rnupdownloader-files" path="/rnupdownloader-files/" />
-     <external-path name="rnupdownloader-external-path" path="/rnupdownloader-external-path/" />
-     <external-files-path name="rnupdownloader-external-path" path="rnupdownloader-external-path" />
-     <external-cache-path name="rnupdownloader-external-cache-path" path="rnupdownloader-external-cache-path" />
+     <cache-path name="rnupdownload-cache" path="/rnupdownload-cache/" />
+     <files-path name="rnupdownload-files" path="/rnupdownload-files/" />
+     <external-path name="rnupdownload-external-path" path="/rnupdownload-external-path/" />
+     <external-files-path name="rnupdownload-external-path" path="rnupdownload-external-path" />
+     <external-cache-path name="rnupdownload-external-cache-path" path="rnupdownload-external-cache-path" />
 </paths>

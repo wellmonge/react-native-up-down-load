@@ -1,26 +1,24 @@
-package com.reactnativeupdownloader.modules;
+package com.reactnativeupdownload.modules;
+import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.reactnativeupdownloader.modules.Download.DownloadModule;
-import com.reactnativeupdownloader.modules.Upload.UploadModule;
-import com.reactnativeupdownloader.modules.Viewer.ViewerModule;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ReactNativeUpDownLoaderPackage implements IReactNativeUpDownLoaderPackage {
+public class ReactNativeUpDownLoadPackage implements ReactPackage {
 
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         //Registering the module.
         return Arrays.<NativeModule>asList(
-            new UploadModule(reactContext), new DownloadModule(reactContext), new ViewerModule(reactContext));
+                new ReactNativeUpDownLoadModule(reactContext));
+
     }
 
-    @Override
     public List<Class<? extends JavaScriptModule>> createJSModules() {
         return Collections.emptyList();
     }

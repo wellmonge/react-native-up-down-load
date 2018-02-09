@@ -1,4 +1,4 @@
-package com.reactnativeupdownloader.modules.Upload;
+package com.reactnativeupdownload.modules;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -17,9 +17,13 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
-import com.reactnativeupdownloader.Helpers.ApplicationFilesHelpers;
+import com.reactnativeupdownload.helpers.ApplicationFilesHelpers;
+
+import org.json.JSONException;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +37,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.ByteString;
 
-public class UploadModule extends ReactContextBaseJavaModule implements ActivityEventListener {
+import static android.support.v4.content.FileProvider.getUriForFile;
+
+public class ReactNativeUpDownLoadModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
     private static final int PICK_CONTENT = 1;
 
@@ -47,20 +53,22 @@ public class UploadModule extends ReactContextBaseJavaModule implements Activity
 
     private String contentMimeType;
 
+    private File currentFile;
+
     private String contentName;
 
     private Callback pickerSuccessCallback;
 
     private Callback pickerCancelCallback;
 
-    public UploadModule(ReactApplicationContext reactContext) {
+    public ReactNativeUpDownLoadModule(ReactApplicationContext reactContext) {
         super(reactContext);
         reactContext.addActivityEventListener(this);
     }
 
     @Override
     public String getName() {
-        return "UploadModule";
+        return "ReactNativeUpDownLoad";
     }
 
     @Override
@@ -214,4 +222,91 @@ public class UploadModule extends ReactContextBaseJavaModule implements Activity
         this.onNewIntent(intent);
     }
 
+    @ReactMethod
+    public void Teste(Callback callback) throws JSONException, IOException {
+        try {
+            callback.invoke("Teste monge");
+        } catch (android.content.ActivityNotFoundException e) {
+            callback.invoke("falhou");
+        }
+    }
+
+    @ReactMethod
+    public void download(String URLtoDownload, Callback callback) throws JSONException, IOException {
+        try {
+            currentFile = this.DownloadFile(URLtoDownload);
+            //callback.invoke(SuccessMessage);
+        } catch (android.content.ActivityNotFoundException e) {
+            //callback.invoke(InternalError);
+        }
+    }
+
+    public File DownloadFile (String URLtoDownload) throws IOException {
+        try {
+            Context context = getCurrentActivity();
+
+            String fileName = URLtoDownload.split("/")[3].toString();
+
+            File f = new File(context.getCacheDir(), fileName);
+
+            if (!f.exists()){
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url(URLtoDownload)
+                        .addHeader("Content-Type", "application/json")
+                        .build();
+                Response res  = client.newCall(request).execute();
+                InputStream reader = res.body().byteStream();
+
+                f.setReadable(true, false);
+
+                FileOutputStream outStream = new FileOutputStream(f);
+                byte[] buffer = new byte[1024];
+                int readBytes = reader.read(buffer);
+                while (readBytes > 0) {
+                    outStream.write(buffer, 0, readBytes);
+                    readBytes = reader.read(buffer);
+                }
+                reader.close();
+                outStream.close();
+            }
+
+            return f;
+
+        } catch (android.content.ActivityNotFoundException e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void showFile(String URLtoDownload)throws IOException {
+        try{
+            Context context = getCurrentActivity();
+
+            ReactApplicationContext reactApplicationContext = (ReactApplicationContext) context.getApplicationContext();
+
+            currentFile = this.DownloadFile(URLtoDownload);
+
+            Uri contentUri = getUriForFile(reactApplicationContext, "reactnativeupdownload.FileProvider", currentFile);
+
+            currentFile.delete();
+
+            ContentResolver cr = reactApplicationContext.getContentResolver();
+            String type = cr.getType(contentUri);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(contentUri,type);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            if (intent.resolveActivity(reactApplicationContext.getPackageManager()) != null) {
+                reactApplicationContext.startActivity(intent);
+            }
+
+            //callback.invoke(SuccessMessage);
+
+        } catch (android.content.ActivityNotFoundException e) {
+            //callback.invoke(InternalError);
+        }
+
+    }
 }
