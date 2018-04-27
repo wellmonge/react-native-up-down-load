@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-var UpdownloadManager = require('./component').component;
+var UpdownloadManager = require('./component/index.android').component;
 
 const postFormData = (config, successCallback, cancelCallback) => {
     if (Platform.OS === 'android') {

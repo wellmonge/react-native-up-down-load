@@ -1,10 +1,10 @@
 {
-  "name": "reactnativeupdownload",
+  "name": "react-native-up-down-load",
   "dist-tags": {
-    "latest": "0.1.1005"
+    "latest": "0.1.1007"
   },
   "versions": [
-    "0.1.1004",
+    "0.1.1006",
     "0.1.1003",
     "0.1.1002"
   ],
