@@ -1,6 +1,11 @@
 {
   "name": "reactnativeupdownload",
-  "version": "0.1.1005",
+  "dist-tags": { "latest": "0.1.1005" },
+  "versions": [
+    "0.1.1004",
+    "0.1.1003",
+    "0.1.1002"
+  ],
   "main": "index.js",
   "private": false,
   "scripts": {
