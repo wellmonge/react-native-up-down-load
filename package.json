@@ -1,6 +1,8 @@
 {
   "name": "reactnativeupdownload",
-  "dist-tags": { "latest": "0.1.1005" },
+  "dist-tags": {
+    "latest": "0.1.1005"
+  },
   "versions": [
     "0.1.1004",
     "0.1.1003",
@@ -21,5 +23,6 @@
     "babel-preset-expo": "4.0.0",
     "react": "16.2.0",
     "react-native": "0.52.0"
-  }
+  },
+  "version": "0.1.1005"
 }
