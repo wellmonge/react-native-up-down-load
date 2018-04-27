@@ -1,6 +1,13 @@
 {
-  "name": "reactnativeupdownload",
-  "version": "0.1.1004",
+  "name": "react-native-up-down-load",
+  "dist-tags": {
+    "latest": "0.1.1007"
+  },
+  "versions": [
+    "0.1.1006",
+    "0.1.1003",
+    "0.1.1002"
+  ],
   "main": "index.js",
   "private": false,
   "scripts": {
@@ -16,5 +23,6 @@
     "babel-preset-expo": "4.0.0",
     "react": "16.2.0",
     "react-native": "0.52.0"
-  }
+  },
+  "version": "0.1.1006"
 }
