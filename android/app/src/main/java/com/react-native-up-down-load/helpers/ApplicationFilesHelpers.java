@@ -1,4 +1,5 @@
-package com.reactnativeupdownload.helpers;
+
+package com.react-native-up-down-load.helpers;
 
 import android.content.ContentUris;
 import android.content.Context;
