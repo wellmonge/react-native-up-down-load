@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.reactnativeupdownload"
+    package="com.react-native-up-down-load"
     android:versionCode="1"
     android:versionName="1.0">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -15,12 +15,13 @@
         android:targetSdkVersion="22" />
 
     <application
-      android:name="com.reactnativeupdownload.MainApplication"
+      android:name=".MainApplication"
       android:allowBackup="true"
       android:label="@string/app_name"
+      android:icon="@mipmap/ic_launcher"
       android:theme="@style/AppTheme">
       <activity
-        android:name="com.reactnativeupdownload.MainActivity"
+        android:name=".MainActivity"
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
         android:windowSoftInputMode="adjustResize">
@@ -29,6 +30,7 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="reactnativeupdownload.FileProvider"
@@ -38,6 +40,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/files_path" />
         </provider>
+
+
 
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     </application>

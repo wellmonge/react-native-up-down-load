@@ -1,9 +1,6 @@
-package com.reactnativeupdownload;
+package com.react-native-up-down-load;
 
 import android.app.Application;
-
-import com.facebook.react.BuildConfig;
-import com.reactnativeupdownload.modules.*;
 
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -13,6 +10,8 @@ import com.facebook.soloader.SoLoader;
 
 import java.util.Arrays;
 import java.util.List;
+
+import com.react-native-up-down-load.modules;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -25,8 +24,15 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-              new MainReactPackage(),
-              new ReactNativeUpDownLoadPackage());
+          new MainReactPackage(),
+          new ReactNativeUpDownLoadPackage()
+
+      );
+    }
+
+    @Override
+    protected String getJSMainModuleName() {
+      return "index";
     }
   };
 
@@ -38,6 +44,6 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-    SoLoader.init(this, /* native exopackage */ false );
+    SoLoader.init(this, /* native exopackage */ false);
   }
 }

@@ -1,4 +1,5 @@
-package com.reactnativeupdownload.modules;
+
+package com.react-native-up-down-load.modules;
 
 import android.app.Activity;
 import android.content.ContentResolver;
